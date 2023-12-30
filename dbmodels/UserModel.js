@@ -13,7 +13,7 @@ const users = new Schema(
     password: {
       type: String,
       required: true,
-      max: 30,
+      max: 25,
       min: 6,
     },
   },
@@ -21,3 +21,7 @@ const users = new Schema(
     timestamps: true,
   }
 );
+
+const Users = mongoose.model("Users", users);
+
+module.exports = Users;
