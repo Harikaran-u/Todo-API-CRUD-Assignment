@@ -50,7 +50,7 @@ app.post("/register", async (req, res) => {
     } else {
       if (password === "" || password === undefined) {
         res.status(400);
-        res.json({ message: "Invalid Password" });
+        res.json({ message: "Please Give Valid Password" });
       } else if (userPwdLength > maxChar || userPwdLength < minChar) {
         res.status(400);
         res.json({
