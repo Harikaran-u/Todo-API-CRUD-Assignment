@@ -88,25 +88,30 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const validUser = await User.findOne({ username });
-  if (validUser) {
-    const userPwd = validUser.password;
-    const isValidPassword = await bcrypt.compare(password, userPwd);
+  try {
+    const validUser = await User.findOne({ username });
+    if (validUser) {
+      const userPwd = validUser.password;
+      const isValidPassword = await bcrypt.compare(password, userPwd);
 
-    if (isValidPassword) {
-      const payload = JSON.stringify({ username: username });
-      const jwtToken = JWT.sign(payload, secretTokenKey);
-      res.status(200);
-      res.json({ message: "Login successful", AuthToken: jwtToken });
+      if (isValidPassword) {
+        const payload = JSON.stringify({ username: username });
+        const jwtToken = JWT.sign(payload, secretTokenKey);
+        res.status(200);
+        res.json({ message: "Login successful", AuthToken: jwtToken });
+      } else {
+        res.status(401);
+        res.json({ message: "Invalid password.Please provide valid password" });
+      }
     } else {
       res.status(401);
-      res.json({ message: "Invalid password.Please provide valid password" });
+      res.json({
+        message: "Invalid user.Please provide valid user credentials.",
+      });
     }
-  } else {
-    res.status(401);
-    res.json({
-      message: "Invalid user.Please provide valid user credentials.",
-    });
+  } catch (error) {
+    res.status(500);
+    res.json({ message: "Internal server error", err: error });
   }
 });
 
