@@ -66,7 +66,7 @@ app.post("/register", async (req, res) => {
           res.status(200);
           res.json({
             message: "Successfully registerd.Please kindly Login",
-            authToken: jwtToken,
+            AuthToken: jwtToken,
           });
         } catch (err) {
           res.status(500);
