@@ -25,7 +25,7 @@ connectTodoDb();
 //json parser
 app.use(express.json());
 
-//create new user - API End Point
+//create new user end point
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -34,10 +34,22 @@ app.post("/register", async (req, res) => {
   const usernameLength = username.length;
   const userPwdLength = password.length;
 
-  if (username === "" || username === undefined) {
+  const validateCredentials =
+    username === "" ||
+    username === undefined ||
+    password === "" ||
+    password === undefined;
+
+  const userNameLengthValidation =
+    usernameLength < minChar || usernameLength > maxChar;
+
+  const passwordLengthValidation =
+    userPwdLength > maxChar || userPwdLength < minChar;
+
+  if (validateCredentials) {
     res.status(400);
-    res.json({ message: "Please kindly give valid username" });
-  } else if (usernameLength < minChar || usernameLength > maxChar) {
+    res.json({ message: "Please kindly give valid username & password" });
+  } else if (userNameLengthValidation) {
     res.status(400);
     res.json({
       message: `username should contain minimum ${minChar} and maximum ${maxChar} characters`,
@@ -48,10 +60,7 @@ app.post("/register", async (req, res) => {
       res.status(409);
       res.json({ message: "User already exists" });
     } else {
-      if (password === "" || password === undefined) {
-        res.status(400);
-        res.json({ message: "Please Give Valid Password" });
-      } else if (userPwdLength > maxChar || userPwdLength < minChar) {
+      if (passwordLengthValidation) {
         res.status(400);
         res.json({
           message: `Password should contain minimum ${minChar} and maximum ${maxChar} characters`,
@@ -75,6 +84,12 @@ app.post("/register", async (req, res) => {
       }
     }
   }
+});
+
+//login user end point
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 });
 
 app.listen(port, () =>
