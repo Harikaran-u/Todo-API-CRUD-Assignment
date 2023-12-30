@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const app = express();
 const port = 3000;
-const secretToken = "MY_SECRET_TOKEN";
+const secretTokenKey = "MY_SECRET_TOKEN";
 
 dotenv.config();
 
@@ -70,12 +70,10 @@ app.post("/register", async (req, res) => {
         try {
           const user = new User({ username, password: hashedPwd });
           await user.save();
-          const payload = { username: username };
-          const jwtToken = JWT.sign(payload, secretToken);
+
           res.status(200);
           res.json({
             message: "Successfully registerd.Please kindly Login",
-            AuthToken: jwtToken,
           });
         } catch (err) {
           res.status(500);
@@ -90,6 +88,26 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+  const validUser = await User.findOne({ username });
+  if (validUser) {
+    const userPwd = validUser.password;
+    const isValidPassword = await bcrypt.compare(password, userPwd);
+
+    if (isValidPassword) {
+      const payload = JSON.stringify({ username: username });
+      const jwtToken = JWT.sign(payload, secretTokenKey);
+      res.status(200);
+      res.json({ message: "Login successful", AuthToken: jwtToken });
+    } else {
+      res.status(401);
+      res.json({ message: "Invalid password.Please provide valid password" });
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: "Invalid user.Please provide valid user credentials.",
+    });
+  }
 });
 
 app.listen(port, () =>
