@@ -18,6 +18,11 @@ const Todo = new Schema(
       min: 20,
       max: 200,
     },
+    userId: {
+      type: String,
+      required: true,
+      default: "",
+    },
   },
   {
     timestamps: true,
