@@ -51,6 +51,8 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+//validating todo item
+
 const validateTodoItem = (title, description) => {
   const titleLength = title.length;
   const descriptionLength = description.length;
@@ -73,62 +75,65 @@ const validateTodoItem = (title, description) => {
   return false;
 };
 
-//create new user end point
+//validating user credentials
 
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+const validateUserCredentials = (username, password) => {
   const minChar = 6;
   const maxChar = 25;
   const usernameLength = username.length;
   const userPwdLength = password.length;
 
-  const validateCredentials =
-    username === "" ||
-    username === undefined ||
-    password === "" ||
-    password === undefined;
+  const isValidUserCredential =
+    username !== "" ||
+    username !== undefined ||
+    password !== "" ||
+    password !== undefined;
 
-  const userNameLengthValidation =
-    usernameLength < minChar || usernameLength > maxChar;
+  const isValidLength =
+    usernameLength >= minChar &&
+    usernameLength <= maxChar &&
+    userPwdLength >= minChar &&
+    userPwdLength <= maxChar;
 
-  const passwordLengthValidation =
-    userPwdLength > maxChar || userPwdLength < minChar;
+  if (isValidUserCredential && isValidLength) {
+    return true;
+  }
+  return false;
+};
 
-  if (validateCredentials) {
-    res.status(400);
-    res.json({ message: "Please kindly give valid username & password" });
-  } else if (userNameLengthValidation) {
-    res.status(400);
-    res.json({
-      message: `username should contain minimum ${minChar} and maximum ${maxChar} characters`,
-    });
-  } else {
+//create new user end point
+
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (validateUserCredentials(username, password)) {
     const response = await User.findOne({ username });
     if (response) {
       res.status(409);
       res.json({ message: "User already exists" });
     } else {
-      if (passwordLengthValidation) {
-        res.status(400);
-        res.json({
-          message: `Password should contain minimum ${minChar} and maximum ${maxChar} characters`,
-        });
-      } else {
-        const hashedPwd = await bcrypt.hash(password, 15);
-        try {
-          const user = new User({ username, password: hashedPwd });
-          await user.save();
+      const hashedPwd = await bcrypt.hash(password, 15);
+      try {
+        const user = new User({ username, password: hashedPwd });
+        const userId = user._id;
+        await user.save();
 
-          res.status(200);
-          res.json({
-            message: "Successfully registerd.Please kindly Login",
-          });
-        } catch (err) {
-          res.status(500);
-          res.json({ message: "Internal Server Error", error: err });
-        }
+        res.status(200);
+        res.json({
+          message: "Successfully registerd.Please kindly Login",
+          userId: userId,
+        });
+      } catch (err) {
+        res.status(500);
+        res.json({ message: "Internal Server Error", error: err });
       }
     }
+  } else {
+    res.status(400);
+    res.json({
+      message:
+        "Please kindly give valid username & password.Also check required lengths",
+    });
   }
 });
 
