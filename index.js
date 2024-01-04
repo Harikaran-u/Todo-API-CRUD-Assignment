@@ -225,7 +225,10 @@ app.put("/update/:id", authenticateToken, async (req, res) => {
 
   if (validateTodoItem(title, description)) {
     try {
-      await Todo.findByIdAndUpdate(todoId, { title, description });
+      await Todo.findByIdAndUpdate(todoId, {
+        title,
+        description,
+      });
       res.status(200).json({ message: "Todo updated successfully" });
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error", error: error });
@@ -249,10 +252,17 @@ app.put("/update/:id", authenticateToken, async (req, res) => {
 app.delete("/delete/:id", authenticateToken, async (req, res) => {
   const todoId = req.params.id;
   try {
-    await Todo.findByIdAndDelete(todoId);
-    res.status(200).json({ message: "Todo deleted successfully" });
+    const result = await Todo.findByIdAndDelete(todoId);
+    console.log(result);
+    if (result) {
+      res.status(200).json({ message: "Todo deleted successfully" });
+    } else {
+      res.status(400).json({ message: "Item not found" });
+    }
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error" }, { error: error });
   }
 });
 
