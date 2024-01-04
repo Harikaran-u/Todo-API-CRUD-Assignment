@@ -222,24 +222,25 @@ app.put("/update/:id", authenticateToken, async (req, res) => {
   const todoId = req.params.id;
 
   const { title, description } = req.body;
-  try {
-    if (validateTodoItem(title, description)) {
+
+  if (validateTodoItem(title, description)) {
+    try {
       await Todo.findByIdAndUpdate(todoId, { title, description });
       res.status(200).json({ message: "Todo updated successfully" });
-    } else {
-      res.status(400).json({
-        error: {
-          message:
-            "Please give valid title & description.Once check the length of title & description",
-          requiredLengths: {
-            title: "minimum 4, maximum 24",
-            description: "minimum 20, maximum 400",
-          },
-        },
-      });
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error", error: error });
     }
-  } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error: error });
+  } else {
+    res.status(400).json({
+      error: {
+        message:
+          "Please give valid title & description.Once check the length of title & description",
+        requiredLengths: {
+          title: "minimum 4, maximum 24",
+          description: "minimum 20, maximum 400",
+        },
+      },
+    });
   }
 });
 
