@@ -224,8 +224,7 @@ app.put("/update/:id", authenticateToken, async (req, res) => {
   const { title, description } = req.body;
   try {
     if (validateTodoItem(title, description)) {
-      const todoItem = await Todo.findById(todoId);
-      await todoItem.updateOne({ title, description });
+      await Todo.findByIdAndUpdate(todoId, { title, description });
       res.status(200).json({ message: "Todo updated successfully" });
     } else {
       res.status(400).json({
