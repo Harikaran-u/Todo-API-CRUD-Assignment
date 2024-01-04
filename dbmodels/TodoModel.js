@@ -8,7 +8,7 @@ const Todo = new Schema(
       type: String,
       required: true,
       default: "New Todo",
-      min: 3,
+      min: 4,
       max: 24,
     },
     description: {
@@ -16,7 +16,7 @@ const Todo = new Schema(
       required: true,
       default: "New Description",
       min: 20,
-      max: 200,
+      max: 400,
     },
     userId: {
       type: String,
