@@ -64,10 +64,10 @@ const validateTodoItem = (title, description) => {
     description !== undefined;
 
   const validateTodoLength =
-    titleLength >= 3 &&
+    titleLength >= 4 &&
     titleLength <= 24 &&
     descriptionLength >= 20 &&
-    descriptionLength <= 200;
+    descriptionLength <= 400;
 
   if (validateTitleDescription && validateTodoLength) {
     return true;
@@ -183,13 +183,19 @@ app.post("/newtodo", authenticateToken, async (req, res) => {
   if (validateTodoItem(title, description)) {
     const newTodo = new Todo({ title, description, userId });
     const todoId = newTodo._id;
-    // console.log(todoId);
+    console.log(todoId);
     res.status(200).json({ message: "Todo created successfully", todoId });
     await newTodo.save();
   } else {
     res.status(400).json({
-      message:
-        "Please give valid title & description.Once check valid title & description length",
+      error: {
+        message:
+          "Please give valid title & description.Once check the length of title & description",
+        requiredLengths: {
+          title: "minimum 4, maximum 24",
+          description: "minimum 20, maximum 400",
+        },
+      },
     });
   }
 });
@@ -214,13 +220,24 @@ app.get("/alltodos", authenticateToken, async (req, res) => {
 
 app.put("/update/:id", authenticateToken, async (req, res) => {
   const todoId = req.params.id;
-  // console.log(todoId);
+
   const { title, description } = req.body;
   try {
     if (validateTodoItem(title, description)) {
       const todoItem = await Todo.findById(todoId);
       await todoItem.updateOne({ title, description });
       res.status(200).json({ message: "Todo updated successfully" });
+    } else {
+      res.status(400).json({
+        error: {
+          message:
+            "Please give valid title & description.Once check the length of title & description",
+          requiredLengths: {
+            title: "minimum 4, maximum 24",
+            description: "minimum 20, maximum 400",
+          },
+        },
+      });
     }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error: error });
