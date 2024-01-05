@@ -225,11 +225,16 @@ app.put("/update/:id", authenticateToken, async (req, res) => {
 
   if (validateTodoItem(title, description)) {
     try {
-      await Todo.findByIdAndUpdate(todoId, {
+      const result = await Todo.findByIdAndUpdate(todoId, {
         title,
         description,
       });
-      res.status(200).json({ message: "Todo updated successfully" });
+
+      if (result !== null) {
+        res.status(200).json({ message: "Todo updated successfully" });
+      } else {
+        res.status(400).json({ message: "Todo not available." });
+      }
     } catch (error) {
       res.status(500).json({ message: "Internal Server Error", error: error });
     }
