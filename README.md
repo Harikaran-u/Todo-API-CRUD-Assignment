@@ -1,5 +1,5 @@
 **Todo CRUD API**
-##This API contains 6 end points##
+## This API contains 6 end points
 1.Register
 2.Login
 3.Create Todo
