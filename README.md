@@ -46,5 +46,22 @@ Todo List API - https://dull-blue-agouti-cuff.cyclic.app
    3. Headers - Should provide JWT Key in Authorization
    4. Todo Object - title, description, userId
    5. Title & Description Lengths - Title(4, 24) & Description(20, 400)
+   6. Result new todo ID
+   7. You will get valuable errors in case of any mistakes
+4. Get All Todos API
+   1. Method - GET
+   2. Body - Should contain Headers
+   3. Headers - Should provide JWT Key in Authorization
+   4. You will get valuable errors in case of any mistakes
+5. Update Todo API
+   1. Method - PUT
+   2. Body - Todo object in JSON Format
+   3. Headers - Should provide JWT Key in Authorization
+   4. Todo Object - title, description
+   5. Path Parameter - todo_id is the path parameter value
    6. You will get valuable errors in case of any mistakes
-
+6. Delete Todo API
+   1. Method - DELETE
+   2. Path Parameter - todo_id is the path parameter value
+   3. You will get valuable errors in case of any mistakes
+   
