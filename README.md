@@ -24,7 +24,7 @@ Todo List API - https://dull-blue-agouti-cuff.cyclic.app
 
 **Note - Instead of "todo_id" in the URL you should provide the actual todo id**
 ---
-**todo_id is path parameter**
+**todo_id is the path parameter**
 
 # Important Notes
 
