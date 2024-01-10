@@ -46,7 +46,7 @@ Todo List API - https://dull-blue-agouti-cuff.cyclic.app
    3. Headers - Should provide JWT Key in Authorization
    4. Todo Object - title, description, userId
    5. Title & Description Lengths - Title(4, 24) & Description(20, 400)
-   6. Result new todo ID
+   6. You will get the Result as a new todo ID
    7. You will get valuable errors in case of any mistakes
 4. Get All Todos API
    1. Method - GET
@@ -64,4 +64,22 @@ Todo List API - https://dull-blue-agouti-cuff.cyclic.app
    1. Method - DELETE
    2. Path Parameter - todo_id is the path parameter value
    3. You will get valuable errors in case of any mistakes
-   
+
+# About code
+---
+1. Follows software best practices
+2. Easy to read
+3. It uses Express Js Middleware for Authentication and Authorization
+4. Passwords are encrypted using bcrypt
+5. It uses JsonWebToken
+
+# Third Party Packages
+---
+1. Mongoose
+2. bcrypt
+3. JsonWebToken
+
+## About Developer 
+  Hi, I'm Harikaran passionate web developer. Having practical experience with web technologies.
+
+**Enjoy Your Todo App**
