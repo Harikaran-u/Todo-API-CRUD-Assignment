@@ -23,6 +23,7 @@ Todo List API - https://dull-blue-agouti-cuff.cyclic.app
   - Delete Todo - https://dull-blue-agouti-cuff.cyclic.app/delete/todo_id
 
 **Note - Instead of "todo_id" in the URL you should provide the actual todo id**
+---
 **todo_id is path parameter**
 
 # Important Notes
